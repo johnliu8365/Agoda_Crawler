@@ -96,7 +96,7 @@ def get_room_data(driver):
 
 def main():
     # 開啟webdriver，並搜尋'東京灣喜來登大飯店'
-    driver = webdriver.Chrome('/usr/local/bin/chromedriver')
+    driver = webdriver.Chrome(os.getenv('CHROME_DRIVER'))
     driver.get('https://www.agoda.com/zh-tw/')
     driver.find_element_by_css_selector('.SearchBoxTextEditor').send_keys("東京灣喜來登大飯店")
     time.sleep(1)
