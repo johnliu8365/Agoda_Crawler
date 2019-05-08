@@ -12,7 +12,7 @@ from email.mime.text import MIMEText
 from email.mime.application import MIMEApplication
 from dotenv import load_dotenv
 
-def get_report():
+def get_report(dir_path):
     host = os.getenv('MYSQL_HOST')
     username = os.getenv('MYSQL_USERNAME')
     password = os.getenv('MYSQL_PASSWORD')
@@ -25,11 +25,13 @@ def get_report():
         data.drop(columns=['id', 'created_at', "room_id"], inplace=True)
         data.columns = [ '每晚價格(NTD)', '人數限制', '優惠內容&取消規定', '房數','客房', '房型摘要']
         data.set_index(keys = ['客房', '房型摘要', '每晚價格(NTD)'], inplace=True)
-        data.to_excel((datetime.datetime.today()).strftime('%Y%m%d') + '_Agoda_Crawler.xlsx')
+        file_name = os.path.join(dir_path, 'report/') + (datetime.datetime.today()).strftime('%Y%m%d') + '_Agoda_Crawler.xlsx'
+        data.to_excel(file_name)
+        return file_name
     except Exception as e:
         print(e)
 
-def send_email():
+def send_email(file_name):
     try:
         msg = MIMEMultipart()
         msg['Subject'] = os.getenv('SUBJECT')
@@ -39,9 +41,8 @@ def send_email():
         text = MIMEText("今天 東京灣喜來登大飯店 的房價報告")
         msg.attach(text)
 
-        filename = (datetime.datetime.today()).strftime('%Y%m%d') + '_Agoda_Crawler.xlsx'
-        xlsx = MIMEApplication(open(filename,'rb').read())
-        xlsx.add_header('Content-Disposition', 'attachment', filename)
+        xlsx = MIMEApplication(open(file_name,'rb').read())
+        xlsx.add_header('Content-Disposition', 'attachment', filename=os.path.basename(file_name))
         msg.attach(xlsx)
 
         server = smtplib.SMTP(os.getenv('SMTP_HOST'))
@@ -57,5 +58,5 @@ def send_email():
 dir_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 env_path = os.path.join(dir_path, '.env')
 load_dotenv(dotenv_path=env_path)
-get_report()
-send_email()
+file_name = get_report(dir_path)
+send_email(file_name)
