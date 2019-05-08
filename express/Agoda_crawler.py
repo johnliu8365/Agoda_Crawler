@@ -30,7 +30,7 @@ def get_max_people(driver, room):
         if w.text[:2] == '最多':
             return w.text
         elif w.text[:2] == '此專':
-            return w.text
+            return '最多'+w.text[11:15]
 
 def insert_room_data(room_name, room_info):
     cursor = db.cursor()
@@ -62,6 +62,8 @@ def insert_price_data(price):
 
 def get_room_data(driver):
     db_rooms = find_room_data()
+
+    driver.implicitly_wait(10)
     masters = driver.find_elements_by_class_name('MasterRoom')
 
     for WebElement in masters:
