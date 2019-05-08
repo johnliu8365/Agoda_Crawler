@@ -5,7 +5,6 @@ import pymysql
 import pandas as pd
 import datetime
 import os
-import datetime
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
