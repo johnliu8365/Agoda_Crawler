@@ -1,0 +1,4 @@
+.env
+report/*.xlsx
+*.ipynb
+.vscode
