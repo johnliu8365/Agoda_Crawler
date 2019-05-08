@@ -55,8 +55,12 @@ def send_email(file_name):
         print(e)
 
 
-dir_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
-env_path = os.path.join(dir_path, '.env')
-load_dotenv(dotenv_path=env_path)
-file_name = get_report(dir_path)
-send_email(file_name)
+def main():
+    dir_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
+    env_path = os.path.join(dir_path, '.env')
+    load_dotenv(dotenv_path=env_path)
+    file_name = get_report(dir_path)
+    send_email(file_name)
+
+if __name__ == '__main__':
+	main()
